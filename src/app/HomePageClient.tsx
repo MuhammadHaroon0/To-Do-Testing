@@ -10,6 +10,7 @@ import { SafeUser } from "@/types"
 import useDebounce from "./hooks/useDebounce"
 import { Loader } from "./components/Loader"
 import axios from 'axios'
+import toast from 'react-hot-toast'
 
 export default function HomePageClient({ currentUser }: { currentUser: SafeUser }) {
     const [tasks, setTasks] = useState<Task[]>([])
@@ -37,11 +38,15 @@ export default function HomePageClient({ currentUser }: { currentUser: SafeUser 
             setTotalPages(response.data.totalPages)
             setTotal(response.data.total)
         } catch (error) {
-            console.error('Error fetching tasks:', error)
+            if (axios.isAxiosError(error) && error.response?.data?.error) {
+                toast.error(error.response.data.error);
+            } else {
+                toast.error('Error fetching tasks')
+            }
         } finally {
             setLoading(false)
         }
-    }, [currentPage, debouncedSearchQuery, currentUser])
+    }, [currentPage, debouncedSearchQuery])
 
     useEffect(() => {
         fetchTasks()
@@ -74,7 +79,11 @@ export default function HomePageClient({ currentUser }: { currentUser: SafeUser 
                 )
             )
         } catch (error) {
-            console.error('Error toggling task:', error)
+            if (axios.isAxiosError(error) && error.response?.data?.error) {
+                toast.error(error.response.data.error);
+            } else {
+                toast.error('Error toggling task')
+            }
         } finally {
             setTogglingTasks(prev => {
                 const newSet = new Set(prev)

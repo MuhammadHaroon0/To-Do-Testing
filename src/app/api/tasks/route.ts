@@ -66,6 +66,7 @@ export async function POST(req: NextRequest) {
 
             return NextResponse.json(task, { status: 201 })
         } catch (error) {
+            console.log(error);
             return NextResponse.json({ error: "Invalid JSON" }, { status: 400 })
         }
     })

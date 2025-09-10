@@ -29,7 +29,7 @@ export function TaskForm({ onSubmit, isSubmitting }: TaskFormProps) {
             await onSubmit(title.trim())
             setTitle('')
             setError('')
-        } catch (err) {
+        } catch {
             setError('Failed to create task')
         }
     }
